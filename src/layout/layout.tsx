@@ -24,7 +24,7 @@ const AppLayout = ({ children }: Props) => {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [dispatch]);
 
   return <div>{children}</div>;
 };
