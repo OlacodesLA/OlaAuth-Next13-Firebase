@@ -16,11 +16,10 @@ import { useTransition } from "react";
 export default function SignUp() {
   const [isLoading, setIsLoading] = useState(false);
 
+  const router = useRouter();
+
   const onSubmit = async (values: IRegistrationValues, actions: any) => {
-    setIsLoading(true);
-    const response = await registerUser(values);
-    console.log(response);
-    setIsLoading(false);
+    registerUser(values, router, setIsLoading);
   };
 
   const { handleChange, errors, touched, handleSubmit, values, handleBlur } =

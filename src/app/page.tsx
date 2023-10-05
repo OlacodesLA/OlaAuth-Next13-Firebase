@@ -15,11 +15,11 @@ const Home = () => {
   const logOut = () => {
     logoutUser(router);
   };
+
   console.log(router);
   return (
     <main className="">
       <div className="">Olacodes</div>
-
       <div className="text-white">{JSON.stringify(user, null, 2)}</div>
       <button className="text-white" onClick={() => logOut()}>
         Logout
