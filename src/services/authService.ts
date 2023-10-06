@@ -10,8 +10,8 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { useRouter, type NextRouter } from "next/router";
 import { auth } from "../config/firebase";
+import { setDoc, doc } from "firebase/firestore";
 import {
   IForgotValues,
   ILoginValues,
@@ -19,22 +19,32 @@ import {
   IResetValues,
 } from "../interfaces/components";
 import toast from "react-hot-toast";
-import { redirect } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { deleteCookie, setCookie } from "cookies-next";
 import useMounted from "../utils";
 import { getFirebaseErrorMessage } from "../utils/errorHandler";
+import { usersCollectionRef } from "../utils/users";
 
 export const registerUser = async (
   values: IRegistrationValues,
   router: AppRouterInstance,
   setIsLoading: (value: boolean) => void
 ) => {
-  const { email, password } = values;
+  const { email, password, firstName, lastName } = values;
   setIsLoading(true);
   createUserWithEmailAndPassword(auth as Auth, email, password)
-    .then((response) => {
-      console.log(response);
+    .then(async (cred) => {
+      // Attach the user id to the user document
+      const userDoc = doc(usersCollectionRef, cred.user.uid);
+      // Set the user
+      await setDoc(userDoc, {
+        email,
+        firstName,
+        lastName,
+      });
+      console.log(cred);
+    })
+    .then(() => {
       toast.success("Account created successfully");
       setIsLoading(false);
       setTimeout(() => {
@@ -59,9 +69,14 @@ export const loginUser = (
   setIsLoading(true);
 
   signInWithEmailAndPassword(auth as Auth, email, password)
-    .then((userCredentials) => {
-      if (userCredentials.user) {
+    .then((cred) => {
+      console.log(cred);
+      if (cred.user) {
         setCookie("auth", "true", {
+          maxAge: 30 * 24 * 60 * 60,
+          path: "/",
+        });
+        setCookie("userId", cred.user.uid, {
           maxAge: 30 * 24 * 60 * 60,
           path: "/",
         });
@@ -99,18 +114,22 @@ export const loginWithGoogle = (router: AppRouterInstance) => {
   const provider = new GoogleAuthProvider();
 
   signInWithPopup(auth as Auth, provider)
-    .then((userProvider) => {
-      if (userProvider.user) {
+    .then((cred) => {
+      if (cred.user) {
         setCookie("auth", "true", {
           maxAge: 30 * 24 * 60 * 60,
           path: "/",
         });
       }
+      setCookie("userId", cred.user.uid, {
+        maxAge: 30 * 24 * 60 * 60,
+        path: "/",
+      });
       toast.success("Successfully Logged In");
       setTimeout(() => {
         router.push("/");
       }, 2000);
-      console.log(userProvider);
+      console.log(cred);
     })
     .catch((error) => {
       console.error(error.message);
@@ -130,8 +149,8 @@ export const resetUserPassword = (
   setIsLoading(true);
 
   confirmPasswordReset(auth as Auth, oobCode, newPassword)
-    .then((userCredentials) => {
-      console.log(userCredentials);
+    .then((cred) => {
+      console.log(cred);
       toast.success("Password has been changed you can now login");
       setTimeout(() => {
         router.push("/auth/login");
@@ -157,8 +176,8 @@ export const forgotUserPassword = (
   sendPasswordResetEmail(auth as Auth, email, {
     url: "http://localhost:3000/auth/login",
   })
-    .then((userCredentials) => {
-      console.log(userCredentials);
+    .then((cred) => {
+      console.log(cred);
       toast.success("Email s ent, check yout email");
       setIsLoading(false);
     })

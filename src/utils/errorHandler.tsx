@@ -24,6 +24,8 @@ export const getFirebaseErrorMessage = (code: string) => {
       break;
     case "auth/invalid-password":
       message = ERROR_MESSAGES.INVALID_PASSWORD_FORMAT;
+    case "Failed to get document because the client is offline.":
+      message = ERROR_MESSAGES.OFFLINE;
       break;
     default:
       message = ERROR_MESSAGES.DEFAULT_MESSAGE;

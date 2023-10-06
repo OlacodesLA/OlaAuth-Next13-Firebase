@@ -25,6 +25,8 @@ export default function SignUp() {
   const { handleChange, errors, touched, handleSubmit, values, handleBlur } =
     useFormik({
       initialValues: {
+        firstName: "",
+        lastName: "",
         email: "",
         password: "",
         password2: "",
@@ -39,6 +41,30 @@ export default function SignUp() {
 
       <form onSubmit={handleSubmit} className=" flex flex-col gap-2 ">
         <StaggerChildren>
+          <motion.div variants={childVariants} className="">
+            <TextField
+              type="text"
+              placeholder="First Name"
+              name="firstName"
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              value={values.firstName}
+              error={errors.firstName}
+              touched={touched.firstName}
+            />
+          </motion.div>
+          <motion.div variants={childVariants} className="">
+            <TextField
+              type="text"
+              placeholder="Last Name"
+              name="lastName"
+              handleChange={handleChange}
+              handleBlur={handleBlur}
+              value={values.lastName}
+              error={errors.lastName}
+              touched={touched.lastName}
+            />
+          </motion.div>
           <motion.div variants={childVariants} className="">
             <TextField
               type="email"
