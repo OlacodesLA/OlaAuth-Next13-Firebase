@@ -20,7 +20,7 @@ const Home = () => {
 
   console.log(router);
   return (
-    <main className="p-5 mx-auto max-w-4xl">
+    <main className="p-5 mx-auto max-w-4xl text-white">
       <header className="">
         <nav className="flex justify-between ">
           <div className="text-xl font-bold">

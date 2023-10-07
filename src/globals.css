@@ -3,10 +3,9 @@
 @tailwind utilities;
 
 @layer components {
-  /* body {
-    background-image: url("/dj-party.jpg");
-    @apply bg-center w-screen h-screen bg-cover;
-  } */
+  body {
+    @apply text-white;
+  }
   /* 
   .glass {
     background: radial-gradient(

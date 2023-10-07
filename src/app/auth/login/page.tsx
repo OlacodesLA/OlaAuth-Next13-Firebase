@@ -83,11 +83,7 @@ export default function SignIn() {
             />
           </motion.div>
           <motion.div variants={childVariants}>
-            <DefaultButton
-              type="submit"
-              isLoading={isLoading}
-              label="Create Account"
-            />
+            <DefaultButton type="submit" isLoading={isLoading} label="Log in" />
           </motion.div>
 
           <motion.div variants={childVariants}>
